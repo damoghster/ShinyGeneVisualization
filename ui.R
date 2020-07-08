@@ -15,7 +15,11 @@ ui<-shinyUI(pageWithSidebar(
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")),
+                         ".csv")), 
+    radioButtons("colSel", "Symbol Column Location:",
+                                                c("Column 1" = "one",
+                                                  "Column 2" = "two")),
+    
     uiOutput('select')
   ),
   
