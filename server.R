@@ -103,4 +103,5 @@ server<-shinyServer(function(input, output,session) {
   #   config(plot_ly(),
   #          toImageButtonOptions= list(filename = as.character(input$mygene))) #,#width = 1000, #height =  350 # thi can be added to toImageButtonOptions
   # })
+  #hello
 })

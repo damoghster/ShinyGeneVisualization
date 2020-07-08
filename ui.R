@@ -11,11 +11,12 @@ ui<-shinyUI(pageWithSidebar(
     #            choices = at2),selected = "AT2"),
     br(),
     # selectInput("genelist","Choose corresponding genelist:", choices = c("AT2_geneList","AM_geneList"),selected = "AT2_geneList"),
-    fileInput("file", "Choose CSV File",
+    fileInput("file", "Choose CSV Data File",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")),
+    #add group file
     uiOutput('select')
   ),
   
