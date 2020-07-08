@@ -1,4 +1,5 @@
 #source("global.R")
+library(dplyr)
 options(shiny.maxRequestSize=1000*1024^2)
 server<-shinyServer(function(input, output,session) {
   # to be modified to incorporate multiple datasets later
@@ -14,31 +15,67 @@ server<-shinyServer(function(input, output,session) {
   #          "AM_genes" = AM_geneList
   #   )
   #})
- 
- 
- 
- at2 <- reactive({
-   req(input$file)
-   out <-readr::read_csv(input$file$datapath)
-   return(out)
- })
- 
- all_ids <- reactive({
-   req(input$file)
-   at2_in <- at2()
-   out<-unique(at2_in$Symbols)
-   return(out)
- })
   
- choiceList <- reactive({
-   req(input$file)
-   return(c(all_ids()))
- })
- 
+  
+  selNum<- reactive({
+    out<- switch(input$colSel,
+                  one = 1, two = 2)
+    return(out)
+  })
+  
+  at2 <- reactive({
+    req(input$file)
+    out <-readr::read_csv(input$file$datapath)
+    return(out)
+  })
+  
+  all_ids <- reactive({
+    req(input$file)
+    at2_in <- at2()
+    selectionNum <- selNum()
+    out<-unique(at2_in[,selectionNum]) #change 1 to variable that can be selected by user
+    return(out)
+  })
+  
+  choiceList <- reactive({
+    req(input$file)
+    return(c(all_ids()))
+  })
+  
+  
+  df <- reactive({
+    req(input$file)
+    at2_in <- at2()
+    selectionNum <- selNum()
+     out <- at2_in %>% filter(at2_in[,selectionNum]==as.character(input$mygene)) %>% distinct(colnames(at2_in, do.NULL = TRUE, prefix = "col")[1], .keep_all = TRUE) %>% select(3:ncol(at2_in))
+     return(out)
+  })
+  xData <- reactive({
+    req(input$file)
+    dfIn <- df()
+    out <- names(dfIn)
+    print(out)
+    return(out)
+  })
+  yData <- reactive({
+    req(input$file)
+    dfIn <- df()
+    out <- as.numeric(dfIn)
+    print(out)
+    return(out)
+  })
+  
   output$view<-DT::renderDataTable({
     req(input$file)
     at2_in <- at2()
-    DT::datatable(at2_in %>% filter(Symbols==as.character(input$mygene)))
+    DT::datatable(at2_in %>% filter(at2_in[, 1]==as.character(input$mygene))) #make dynamic later
+  })
+  
+  output$view2<-DT::renderDataTable({
+    req(input$file)
+    at2_in <- at2()
+    selectionNum <- selNum()
+    DT::datatable(at2_in %>% filter(at2_in[,selectionNum]==as.character(input$mygene)) %>% distinct(colnames(at2_in, do.NULL = TRUE, prefix = "col")[1], .keep_all = TRUE) %>% select(3:ncol(at2_in)))
   })
   
   #input$mygene
@@ -56,28 +93,6 @@ server<-shinyServer(function(input, output,session) {
                    choices =  choiceList())
   })
   
- 
-   # output$uigene = renderPlotly({
-   #   # inputgene = input$mygene # updateSelectizeInput(session, 'mygene', choices  = c(unique(at2$Gene_Symbol)),
-   #     #                 server   = TRUE,
-   #            #          selected = "Ddx58")
-   #   req(input$file)
-   #    at2_in <- at2()
-   #   df<-at2_in %>% filter(Gene_Symbol==as.character(input$mygene))
-   #   #t<- #df %>% summarise(max(count)) %>% pull() %>% as.data.frame()
-   #   #t<-as.numeric(max(df$count))
-   #   set_y_axis <- list(title = "Counts (CPM)", range = c(0,(max(df$count)+0.15*max(df$count))))
-   #   set_x_axis_wt <- list(title = "Juvenile AT2")
-   #   
-   #   # font style # %>% layout(boxmode="group")
-   #   p1<-plot_ly(data=df %>% filter(genotype=="WT" & age=="Juvenile"), y = ~count, color = ~group,colors = juvenile_colors,
-   #               type = "box",width = 900, height = 800,jitter = 0.3, pointpos = 0, boxpoints = 'all') %>%
-   #     layout(xaxis=set_x_axis_wt,yaxis = set_y_axis)# %>% layout(annotations = juv_title)
-   #   p <- subplot(p1, titleX = TRUE, titleY = TRUE,nrows = 2,margin = 0.07) %>% layout(showlegend = TRUE)
-   #   p %>%
-   #   config(plot_ly(),
-   #          toImageButtonOptions= list(filename = as.character(input$mygene))) #,#width = 1000, #height =  350 # thi can be added to toImageButtonOptions
-   # })
   
   # output$uigene = renderPlotly({
   #   # inputgene = input$mygene # updateSelectizeInput(session, 'mygene', choices  = c(unique(at2$Gene_Symbol)),
@@ -90,18 +105,26 @@ server<-shinyServer(function(input, output,session) {
   #   #t<-as.numeric(max(df$count))
   #   set_y_axis <- list(title = "Counts (CPM)", range = c(0,(max(df$count)+0.15*max(df$count))))
   #   set_x_axis_wt <- list(title = "Juvenile AT2")
-  #   set_x_axis_ko <- list(title = "Adult AT2")
+  #   
   #   # font style # %>% layout(boxmode="group")
   #   p1<-plot_ly(data=df %>% filter(genotype=="WT" & age=="Juvenile"), y = ~count, color = ~group,colors = juvenile_colors,
   #               type = "box",width = 900, height = 800,jitter = 0.3, pointpos = 0, boxpoints = 'all') %>%
   #     layout(xaxis=set_x_axis_wt,yaxis = set_y_axis)# %>% layout(annotations = juv_title)
-  #   p2<-plot_ly(data=df %>% filter(genotype=="WT" & age=="Adult"), y = ~count, color = ~group, colors = adult_colors,
-  #               type = "box",width = 900, height = 800,jitter = 0.3, pointpos = 0, boxpoints = 'all') %>%
-  #     layout(xaxis=set_x_axis_ko,yaxis = set_y_axis)# %>% layout(title=adult_title)
-  #   p <- subplot(p1, p2, titleX = TRUE, titleY = TRUE,nrows = 2,margin = 0.07) %>% layout(showlegend = TRUE)
+  #   p <- subplot(p1, titleX = TRUE, titleY = TRUE,nrows = 2,margin = 0.07) %>% layout(showlegend = TRUE)
   #   p %>%
   #   config(plot_ly(),
   #          toImageButtonOptions= list(filename = as.character(input$mygene))) #,#width = 1000, #height =  350 # thi can be added to toImageButtonOptions
   # })
-  #hello
+  
+  output$uigene = renderPlotly({
+    req(input$file)
+    xDataIn <- xData()
+    yDataIn <- yData()
+    p<-plot_ly(x=xDataIn, y=yDataIn,name = "Gene Counts",type = "scatter")
+  })
+  
+  # p<- reactive({
+  #  out<- plot_ly(x=xData, y=yData,name = "Gene Counts", type = "bar")
+  #  return(out)
+  # })
 })
