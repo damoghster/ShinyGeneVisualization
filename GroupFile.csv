@@ -1,0 +1,19 @@
+﻿Genes ,Group
+b05 Neutrophil1 Exp2,1
+b07 Neutrophil3 Exp2,1
+b10 Monocyte1 Exp2,2
+b11 Monocyte2 Exp2,2
+a01 brain microglia1 Exp1 m,3
+a02 brain microglia2 Exp1 m,3
+a06 peritoneum Mac1 Exp1 m,4
+a07 peritoneum Mac2 Exp1 m,4
+b08 Spleen Mac1 Exp2,5
+b09 Spleen Mac2 Exp2,5
+b04 Kupffer Exp2,6
+b15 Kupffer2 Exp2,6
+a12 LI Mac2 Exp1 m,7
+a13 LI Mac3 Exp1 m,7
+a10 SI Mac3 Exp1 m,8
+a11 SI Mac4 Exp1 m,8
+b02 lung Exp2,9
+b17 lung mac2 Exp2,9
