@@ -24,13 +24,20 @@ server<-shinyServer(function(input, output,session) {
   })
   
   at2 <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     out <-readr::read_csv(input$file$datapath)
+    return(out)
+  })
+  groups <- reactive({
+    req(input$gFile)
+    out <-readr::read_csv(input$gFile$datapath)
     return(out)
   })
   
   all_ids <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     at2_in <- at2()
     selectionNum <- selNum()
     out<-unique(at2_in[,selectionNum]) #change 1 to variable that can be selected by user
@@ -38,27 +45,31 @@ server<-shinyServer(function(input, output,session) {
   })
   
   choiceList <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     return(c(all_ids()))
   })
   
   
   df <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     at2_in <- at2()
     selectionNum <- selNum()
      out <- at2_in %>% filter(at2_in[,selectionNum]==as.character(input$mygene)) %>% distinct(colnames(at2_in, do.NULL = TRUE, prefix = "col")[1], .keep_all = TRUE) %>% select(3:ncol(at2_in))
      return(out)
   })
   xData <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     dfIn <- df()
     out <- names(dfIn)
     print(out)
     return(out)
   })
   yData <- reactive({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     dfIn <- df()
     out <- as.numeric(dfIn)
     print(out)
@@ -66,13 +77,15 @@ server<-shinyServer(function(input, output,session) {
   })
   
   output$view<-DT::renderDataTable({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     at2_in <- at2()
     DT::datatable(at2_in %>% filter(at2_in[, 1]==as.character(input$mygene))) #make dynamic later
   })
   
   output$view2<-DT::renderDataTable({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     at2_in <- at2()
     selectionNum <- selNum()
     DT::datatable(at2_in %>% filter(at2_in[,selectionNum]==as.character(input$mygene)) %>% distinct(colnames(at2_in, do.NULL = TRUE, prefix = "col")[1], .keep_all = TRUE) %>% select(3:ncol(at2_in)))
@@ -85,7 +98,8 @@ server<-shinyServer(function(input, output,session) {
   })
   
   output$select = renderUI({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     selectizeInput("mygene",
                    label = h5("Enter your gene here : "),
                    multiple = FALSE,
@@ -98,7 +112,7 @@ server<-shinyServer(function(input, output,session) {
   #   # inputgene = input$mygene # updateSelectizeInput(session, 'mygene', choices  = c(unique(at2$Gene_Symbol)),
   #     #                 server   = TRUE,
   #            #          selected = "Ddx58")
-  #   req(input$file)
+  #   req(input$file) req(input$gFile)
   #    at2_in <- at2()
   #   df<-at2_in %>% filter(Gene_Symbol==as.character(input$mygene))
   #   #t<- #df %>% summarise(max(count)) %>% pull() %>% as.data.frame()
@@ -117,12 +131,13 @@ server<-shinyServer(function(input, output,session) {
   # })
   
   output$uigene = renderPlotly({
-    req(input$file)
+    req(input$file) 
+    req(input$gFile)
     xDataIn <- xData()
     yDataIn <- yData()
     p<-plot_ly(x=xDataIn, y=yDataIn,name = "Gene Counts",type = "scatter")
   })
-  
+  #
   # p<- reactive({
   #  out<- plot_ly(x=xData, y=yData,name = "Gene Counts", type = "bar")
   #  return(out)
