@@ -11,6 +11,7 @@ ui<-shinyUI(pageWithSidebar(
     #            choices = at2),selected = "AT2"),
     br(),
     # selectInput("genelist","Choose corresponding genelist:", choices = c("AT2_geneList","AM_geneList"),selected = "AT2_geneList"),
+    uiOutput('primaryData'),
     fileInput("file", "Choose CSV File",
               multiple = FALSE,
               accept = c("text/csv",
@@ -34,7 +35,9 @@ ui<-shinyUI(pageWithSidebar(
     tabsetPanel(
       tabPanel("Data", dataTableOutput("view")),
       tabPanel("Data", dataTableOutput("view2")),
-      tabPanel("Plot",plotlyOutput("uigene")),
+      tabPanel("Plot",plotlyOutput("plotSecondary")), 
+      tabPanel("Plot",plotOutput("plot2")),
+      tabPanel("Multiple Plot", plotlyOutput("plotPrimary"), plotlyOutput("plotSecondary")),
       tabPanel("About", verbatimTextOutput("summary"))
       
     )
