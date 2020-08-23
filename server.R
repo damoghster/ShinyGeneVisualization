@@ -137,9 +137,6 @@ server<-shinyServer(function(input, output,session) {
     yDataIn <- yData()
     p<-plot_ly(x=xDataIn, y=yDataIn,name = "Gene Counts",type = "scatter")
   })
-  #
-  # p<- reactive({
-  #  out<- plot_ly(x=xData, y=yData,name = "Gene Counts", type = "bar")
-  #  return(out)
-  # })
+  
+  
 })
