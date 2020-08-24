@@ -146,6 +146,12 @@ server<-shinyServer(function(input, output,session) {
     req(input$gFile)
     df_in <- df()
     group_in <- groups()
+    print(group_in)
+    print( df_in %>%
+             gather(Sample, Value) %>%
+             mutate(Samples = gsub("\\d+", "", Sample)) %>%
+             left_join(group_in) %>%
+             mutate(Group = factor(Group)))
     df_in %>%
       gather(Sample, Value) %>%
       mutate(Samples = gsub("\\d+", "", Sample)) %>%
@@ -155,10 +161,5 @@ server<-shinyServer(function(input, output,session) {
       geom_boxplot() +
       geom_jitter(aes(color  = Samples)) +
       theme_bw()
-    print( df_in %>%
-             gather(Sample, Value) %>%
-             mutate(Samples = gsub("\\d+", "", Sample)) %>%
-             left_join(group_in) %>%
-             mutate(Group = factor(Group)))
   })
 })
