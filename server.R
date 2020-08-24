@@ -1,5 +1,7 @@
 #source("global.R")
 library(dplyr)
+library(tidyr)
+
 options(shiny.maxRequestSize=1000*1024^2)
 server<-shinyServer(function(input, output,session) {
   # to be modified to incorporate multiple datasets later
@@ -139,4 +141,24 @@ server<-shinyServer(function(input, output,session) {
   })
   
   
+  output$plot2 <- renderPlot({
+    req(input$file)
+    req(input$gFile)
+    df_in <- df()
+    group_in <- groups()
+    df_in %>%
+      gather(Sample, Value) %>%
+      mutate(Samples = gsub("\\d+", "", Sample)) %>%
+      left_join(group_in) %>%
+      mutate(Group = factor(Group)) %>%
+      ggplot(aes(Group, Value)) +
+      geom_boxplot() +
+      geom_jitter(aes(color  = Samples)) +
+      theme_bw()
+    print( df_in %>%
+             gather(Sample, Value) %>%
+             mutate(Samples = gsub("\\d+", "", Sample)) %>%
+             left_join(group_in) %>%
+             mutate(Group = factor(Group)))
+  })
 })

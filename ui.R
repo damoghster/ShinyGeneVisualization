@@ -1,4 +1,5 @@
 library(shiny)
+
 source("global.R")
 ui<-shinyUI(pageWithSidebar(
   # use_waiter(), # include dependencies
@@ -35,6 +36,7 @@ ui<-shinyUI(pageWithSidebar(
       tabPanel("Data", dataTableOutput("view")),
       tabPanel("Data", dataTableOutput("view2")),
       tabPanel("Plot",plotlyOutput("uigene")),
+      tabPanel("PlotGrouped",plotOutput("plot2")),
       tabPanel("About", verbatimTextOutput("summary"))
       
     )
