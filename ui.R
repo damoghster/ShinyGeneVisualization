@@ -35,9 +35,7 @@ ui<-shinyUI(pageWithSidebar(
     tabsetPanel(
       tabPanel("Data", dataTableOutput("view")),
       tabPanel("Plot",plotlyOutput("uigene")),
-      tabPanel("PlotGrouped",plotOutput("plot2")),
       tabPanel("About", verbatimTextOutput("summary"))
-      
     )
   )
 ))

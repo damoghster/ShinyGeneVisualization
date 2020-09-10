@@ -82,7 +82,7 @@ server<-shinyServer(function(input, output,session) {
   #input$mygene
   output$summary<- renderText({
     "This application allows users to select a single gene of interest and 
-    plot a interactive boxplot for gene expression data from AT-II cells"
+    plot a interactive boxplot for gene expression data"
   })
   
   output$select = renderUI({
