@@ -1,23 +1,2 @@
-<<<<<<< HEAD
 b05 Neutrophil1 Exp2,b07 Neutrophil3 Exp2,b10 Monocyte1 Exp2,b11 Monocyte2 Exp2,a01 brain microglia1 Exp1 m,a02 brain microglia2 Exp1 m,a06 peritoneum Mac1 Exp1 m,a07 peritoneum Mac2 Exp1 m,b08 Spleen Mac1 Exp2,b09 Spleen Mac2 Exp2,b04 Kupffer Exp2,b15 Kupffer2 Exp2,a12 LI Mac2 Exp1 m,a13 LI Mac3 Exp1 m,a10 SI Mac3 Exp1 m,a11 SI Mac4 Exp1 m,b02 lung Exp2,b17 lung mac2 Exp2
 Neutrophil,Neutrophil,Monocyte,Monocyte,Brain Microglia,Brain Microglia,Peritoneum,Peritoneum,Spleen,Spleen,Kuppfer,Kuppfer,LI,LI,SI,SI,Lung,Lung
-=======
-b05 Neutrophil1 Exp2,1
-b07 Neutrophil3 Exp2,1
-b10 Monocyte1 Exp2,2
-b11 Monocyte2 Exp2,2
-a01 brain microglia1 Exp1 m,3
-a02 brain microglia2 Exp1 m,3
-a06 peritoneum Mac1 Exp1 m,4
-a07 peritoneum Mac2 Exp1 m,4
-b08 Spleen Mac1 Exp2,5
-b09 Spleen Mac2 Exp2,5
-b04 Kupffer Exp2,6
-b15 Kupffer2 Exp2,6
-a12 LI Mac2 Exp1 m,7
-a13 LI Mac3 Exp1 m,7
-a10 SI Mac3 Exp1 m,8
-a11 SI Mac4 Exp1 m,8
-b02 lung Exp2,9
-b17 lung mac2 Exp2,9
->>>>>>> 1d4f3fc5d829e02007ece0edcec71be41713ead7
