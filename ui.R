@@ -12,6 +12,7 @@ ui<-shinyUI(pageWithSidebar(
     #            choices = at2),selected = "AT2"),
     br(),
     # selectInput("genelist","Choose corresponding genelist:", choices = c("AT2_geneList","AM_geneList"),selected = "AT2_geneList"),
+    uiOutput('primaryData'),
     fileInput("file", "Choose CSV File",
               multiple = FALSE,
               accept = c("text/csv",
@@ -22,19 +23,27 @@ ui<-shinyUI(pageWithSidebar(
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")), 
-    radioButtons("colSel", "Symbol Column Location:",
+    radioButtons("colSel_pri", "Primary Data Symbol Column Location:",
                                                 c("Column 1" = "one",
                                                   "Column 2" = "two")),
     
-    uiOutput('select')
+    uiOutput('colSelect_sec'),
+    
+    
+    uiOutput('select_pri'),
+    uiOutput('select_sec')
   ),
   
   # Show a summary of the dataset and an HTML table with the requested
   # number of observations
   mainPanel(
     tabsetPanel(
-      tabPanel("Data", dataTableOutput("view")),
-      tabPanel("Plot",plotlyOutput("uigene")),
+      tabPanel("DataPri", dataTableOutput("view_pri")),
+      tabPanel("DataSec", dataTableOutput("view_sec")),
+      tabPanel("PlotPri",plotlyOutput("uigene_pri")),
+      tabPanel("PlotSec",plotlyOutput("uigene_sec")),
+      tabPanel("PlotBoth",plotlyOutput("both")
+      ),
       tabPanel("About", verbatimTextOutput("summary"))
     )
   )
