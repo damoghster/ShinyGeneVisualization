@@ -2,27 +2,33 @@ library(shiny)
 
 source("global.R")
 ui<-shinyUI(pageWithSidebar(
-  # use_waiter(), # include dependencies
-  # spin_seven_circle()
-  # Application title
-  headerPanel("BoxPlot for AT2 cells"), # name of the application (to be finalized :))
+ 
+  headerPanel("Visualization of Gene Expression"), 
   sidebarPanel(
-    div(p("Create a box plot for your gene in all the three age groups")),
-    #selectInput("dataset", "Choose a dataset:", 
-    #            choices = at2),selected = "AT2"),
+    div(p("Visualize gene expression in mouse datasets.")),
+
     br(),
-    # selectInput("genelist","Choose corresponding genelist:", choices = c("AT2_geneList","AM_geneList"),selected = "AT2_geneList"),
+   
+    radioButtons("mode", "Choose mode:",
+                 c("One dataset, one gene" = "one",
+                   "One dataset, two genes" = "two", 
+                   "Two datasets, one gene" = "three")),
+  
     uiOutput('primaryData'),
-    fileInput("file", "Choose CSV File",
+    
+    conditionalPanel(condition = "input.mode != 'one'",
+    fileInput("file", "Upload gene expression table",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
                          ".csv")), 
-    fileInput("gFile", "Choose CSV Group File",
+    fileInput("gFile", "Upload sample groups",
               multiple = FALSE,
               accept = c("text/csv",
                          "text/comma-separated-values,text/plain",
-                         ".csv")), 
+                         ".csv"))
+    
+    ),
     radioButtons("colSel_pri", "Primary Data Symbol Column Location:",
                                                 c("Column 1" = "one",
                                                   "Column 2" = "two")),
@@ -34,16 +40,14 @@ ui<-shinyUI(pageWithSidebar(
     uiOutput('select_sec')
   ),
   
-  # Show a summary of the dataset and an HTML table with the requested
-  # number of observations
+
   mainPanel(
-    tabsetPanel(
+    tabsetPanel(id = "tabs",
       tabPanel("DataPri", dataTableOutput("view_pri")),
       tabPanel("DataSec", dataTableOutput("view_sec")),
       tabPanel("PlotPri",plotlyOutput("uigene_pri")),
       tabPanel("PlotSec",plotlyOutput("uigene_sec")),
-      tabPanel("PlotBoth",plotlyOutput("both")
-      ),
+      tabPanel("PlotBoth",plotlyOutput("both")),
       tabPanel("About", verbatimTextOutput("summary"))
     )
   )

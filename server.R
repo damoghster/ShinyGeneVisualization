@@ -7,6 +7,27 @@ library(plotly)
 options(shiny.maxRequestSize=1000*1024^2)
 server<-shinyServer(function(input, output,session) {
   
+  observeEvent(input$mode, {
+    out<- switch(input$mode,
+                    one = 1, two = 2, three = 3)
+    if(out == 1){
+    hideTab(inputId = "tabs", target = "DataSec")
+      hideTab(inputId = "tabs", target = "PlotSec")
+       hideTab(inputId = "tabs", target = "PlotBoth")
+    }
+    
+  })
+  
+  observeEvent(input$mode, {
+    out<- switch(input$mode,
+                 one = 1, two = 2, three = 3)
+    if(out != 1){
+      showTab(inputId = "tabs", target = "DataSec")
+      showTab(inputId = "tabs", target = "PlotSec")
+      showTab(inputId = "tabs", target = "PlotBoth")
+    }
+  })
+  
   selNum_pri<- reactive({
     out<- switch(input$colSel_pri,
                   one = 1, two = 2)
@@ -17,7 +38,11 @@ server<-shinyServer(function(input, output,session) {
                  one = 1, two = 2)
     return(out)
   })
-  
+  mode<- reactive({
+    out<- switch(input$mode,
+                 one = 1, two = 2)
+    return(out)
+  })
   data_pri <- reactive({
     infile <- input$priData
     if (is.null(infile)){
@@ -175,7 +200,7 @@ server<-shinyServer(function(input, output,session) {
   
   output$primaryData = renderUI({
     selectInput(inputId = 'priData',
-                label = 'Choose primary data',
+                label = 'Choose primary data set',
                 choices = list.files(path = "./Primary",
                                      full.names = FALSE,
                                      recursive = FALSE))
@@ -199,8 +224,6 @@ server<-shinyServer(function(input, output,session) {
   })
   
   output$select_sec = renderUI({
-    req(input$file) 
-    req(input$gFile)
     selectizeInput("mygene_sec",
                    label = h5("Select secondary data gene: "),
                    multiple = FALSE,
